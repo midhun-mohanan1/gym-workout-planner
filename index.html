@@ -2,8 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>5-Day Workout Routine</title>
+
+  <!-- App Icons -->
+  <link rel="icon" type="image/png" sizes="512x512" href="./icon.png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="./icon.png" />
+
+  <!-- PWA & Mobile App Settings -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  
+  <!-- iOS Safari Specific Settings -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Workout" />
+
   <style>
     :root {
       --bg: #0f172a;
@@ -37,13 +52,16 @@
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       background-color: var(--bg);
       color: var(--text);
       line-height: 1.6;
-      padding: 1.5rem 1rem;
+      padding: calc(1.5rem + env(safe-area-inset-top)) 1rem calc(1.5rem + env(safe-area-inset-bottom)) 1rem;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .container {
@@ -111,6 +129,12 @@
       overflow-x: auto;
       padding-bottom: 0.5rem;
       margin-bottom: 1.5rem;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .tabs::-webkit-scrollbar {
+      display: none;
     }
 
     .tab-btn {
@@ -394,6 +418,15 @@
         applyTheme(prefersLight ? 'light' : 'dark');
       }
     })();
+
+    // Register Service Worker for PWA Offline / App Mode
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('ServiceWorker registered:', reg.scope))
+          .catch((err) => console.log('ServiceWorker registration failed:', err));
+      });
+    }
   </script>
 </body>
 </html>
